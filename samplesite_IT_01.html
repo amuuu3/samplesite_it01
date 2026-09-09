@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ソリデックス株式会社 | SOLIDEX Inc. ― 受託システム開発</title>
+<meta name="description" content="ソリデックス株式会社は、要件定義から開発・運用保守までを一気通貫で担う受託システム開発会社です。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #14213D;
+    --blue: #1657FF;
+    --blue-deep: #0C3FC7;
+    --blue-tint: #EEF3FF;
+    --orange: #FF8A3D;
+    --orange-deep: #E96F1F;
+    --orange-tint: #FFF1E5;
+    --bg: #FFFFFF;
+    --bg-alt: #F7F9FF;
+    --line: #E4E9F5;
+    --text: #1B2440;
+    --text-sub: #5C6B8A;
+    --ff-head: 'Zen Kaku Gothic New', 'Hiragino Kaku Gothic ProN', sans-serif;
+    --ff-body: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+    --maxw: 1160px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    font-family: var(--ff-body);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img,svg{ max-width:100%; display:block; }
+  a{ color: inherit; text-decoration: none; }
+  ul{ margin:0; padding:0; list-style:none; }
+  h1,h2,h3,h4{ font-family: var(--ff-head); margin:0; color: var(--navy); }
+  p{ margin:0; }
+  .container{ max-width: var(--maxw); margin: 0 auto; padding: 0 32px; position:relative; }
+
+  :focus-visible{ outline: 2px solid var(--blue); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal{ opacity:0; transform: translateY(28px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in-view{ opacity:1; transform:none; }
+  .reveal-d1.in-view{ transition-delay: .08s; }
+  .reveal-d2.in-view{ transition-delay: .16s; }
+  .reveal-d3.in-view{ transition-delay: .24s; }
+  .reveal-d4.in-view{ transition-delay: .32s; }
+
+  /* ---------- Decorative blobs ---------- */
+  .blob{
+    position:absolute; border-radius:50%; filter: blur(2px); pointer-events:none; z-index:0;
+    opacity:.55;
+  }
+  @keyframes drift{
+    0%{ transform: translate(0,0) rotate(0deg); }
+    50%{ transform: translate(14px,-18px) rotate(8deg); }
+    100%{ transform: translate(0,0) rotate(0deg); }
+  }
+  @keyframes drift2{
+    0%{ transform: translate(0,0) rotate(0deg); }
+    50%{ transform: translate(-16px,16px) rotate(-6deg); }
+    100%{ transform: translate(0,0) rotate(0deg); }
+  }
+  @keyframes float{
+    0%,100%{ transform: translateY(0); }
+    50%{ transform: translateY(-14px); }
+  }
+  @keyframes pulseSoft{
+    0%,100%{ transform: scale(1); }
+    50%{ transform: scale(1.05); }
+  }
+  @keyframes spinSlow{
+    to{ transform: rotate(360deg); }
+  }
+
+  /* ---------- Grain texture (2026: anti-AI "hand touch") ---------- */
+  .grain{
+    position:fixed; inset:0; z-index:400; pointer-events:none;
+    opacity:.035; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:160px 160px;
+  }
+
+  /* ---------- Scroll progress ---------- */
+  .scroll-progress{
+    position:fixed; top:0; left:0; height:3px; width:0%; z-index:500;
+    background: linear-gradient(90deg, var(--blue), var(--orange));
+  }
+
+  /* ---------- Header ---------- */
+  .site-header{
+    position: sticky; top:0; z-index: 200;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: box-shadow .3s ease, border-color .3s ease;
+  }
+  .site-header.scrolled{
+    box-shadow: 0 6px 24px rgba(20,33,61,0.06);
+    border-color: var(--line);
+  }
+  .site-header .container{
+    display:flex; align-items:center; justify-content:space-between;
+    height: 76px;
+  }
+  .logo{
+    font-family: var(--ff-head); font-weight:900; font-size: 20px; letter-spacing: 0.02em;
+    color: var(--navy); display:flex; align-items:baseline; gap:8px;
+  }
+  .logo span{ font-size: 11px; font-weight:500; color: var(--text-sub); font-family: var(--ff-body); }
+  .main-nav{ display:flex; align-items:center; gap: 36px; }
+  .main-nav ul{ display:flex; gap: 30px; }
+  .main-nav a{
+    font-size: 14.5px; font-weight:500; color: var(--navy);
+    position:relative; padding: 4px 0;
+  }
+  .main-nav a::after{
+    content:""; position:absolute; left:0; right:0; bottom:-2px; height:2px;
+    background: var(--blue); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .main-nav a:hover::after{ transform: scaleX(1); }
+  .nav-cta{
+    background: var(--blue); color:#fff; font-size:14px; font-weight:700;
+    padding: 11px 24px; border-radius: 999px; white-space:nowrap;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 18px rgba(22,87,255,0.25);
+  }
+  .nav-cta:hover{ background: var(--blue-deep); transform: translateY(-2px); }
+
+  .nav-toggle{
+    display:none; width:40px; height:40px; border:none; background:none; cursor:pointer;
+    flex-direction:column; justify-content:center; align-items:center; gap:5px;
+  }
+  .nav-toggle span{ width:22px; height:2px; background:var(--navy); border-radius:2px; transition: all .3s ease; }
+  .nav-toggle.open span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2){ opacity:0; }
+  .nav-toggle.open span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding: 84px 0 80px;
+    background: linear-gradient(180deg, var(--blue-tint) 0%, #fff 78%);
+    overflow:hidden;
+    position:relative;
+  }
+  .hero .container{
+    display:grid; grid-template-columns: 1.05fr 0.95fr; gap: 40px; align-items:center;
+  }
+  .hero-eyebrow{
+    font-size: 13px; color: var(--blue); font-weight:700; margin-bottom: 18px;
+    display:flex; align-items:center; gap:10px;
+    opacity:0; animation: fadeUp .7s ease forwards; animation-delay:.05s;
+  }
+  .hero-eyebrow::before{ content:""; width: 24px; height: 1px; background: var(--blue); }
+  .hero-heading-wrap{ position:relative; }
+  .ghost-text{
+    position:absolute; top:-46px; left:-4px; z-index:0;
+    font-family: var(--ff-head); font-weight:900; letter-spacing:.02em;
+    font-size: clamp(64px, 9vw, 128px); line-height:1; color: var(--blue);
+    opacity:.07; white-space:nowrap; pointer-events:none; user-select:none;
+  }
+  .hero h1{
+    position:relative; z-index:1;
+    font-size: clamp(30px, 4.1vw, 48px);
+    font-weight:900; line-height:1.48; letter-spacing: 0.01em;
+    margin-bottom: 26px;
+    opacity:0; animation: fadeUp .7s ease forwards; animation-delay:.15s;
+  }
+  .hero-lead{
+    font-size: 16px; color: var(--text-sub); max-width: 44ch; margin-bottom: 36px;
+    opacity:0; animation: fadeUp .7s ease forwards; animation-delay:.28s;
+  }
+  .hero-actions{
+    display:flex; gap:16px; flex-wrap:wrap;
+    opacity:0; animation: fadeUp .7s ease forwards; animation-delay:.4s;
+  }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(18px);} to{ opacity:1; transform:none; } }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding: 15px 30px; font-size: 14.5px; font-weight:700; border-radius: 999px;
+    transition: all 0.22s ease; border: 1px solid transparent;
+  }
+  .btn-primary{ background: var(--blue); color:#fff; box-shadow: 0 10px 24px rgba(22,87,255,0.28); }
+  .btn-primary:hover{ background: var(--blue-deep); transform: translateY(-2px); }
+  .btn-ghost{ border-color: var(--line); color: var(--navy); background:#fff; }
+  .btn-ghost:hover{ border-color: var(--blue); color: var(--blue); transform: translateY(-2px); }
+
+  .hero-art{ position:relative; width:100%; z-index:1; }
+  .hero-art .float-el{ animation: float 4.2s ease-in-out infinite; }
+  .hero-art .float-el.d2{ animation-delay:.6s; animation-duration:4.8s; }
+  .hero-art .float-el.d3{ animation-delay:1.2s; animation-duration:3.9s; }
+  .hero-art .scale-in{ opacity:0; animation: scaleIn .6s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes scaleIn{ from{ opacity:0; transform: scale(.85); } to{ opacity:1; transform: scale(1); } }
+
+  /* ---------- Marquee ---------- */
+  .marquee{
+    background: var(--navy); overflow:hidden; padding: 18px 0;
+    transform: rotate(-1.2deg); margin: -18px 0 56px;
+    position:relative; z-index:2;
+  }
+  .marquee-track{
+    display:flex; width:max-content; gap: 48px;
+    animation: marquee 22s linear infinite;
+  }
+  .marquee-track span{
+    font-family: var(--ff-head); font-weight:700; font-size: 16px; color:#fff;
+    display:flex; align-items:center; gap:14px; white-space:nowrap;
+  }
+  .marquee-track span::after{ content:"◆"; color: var(--orange); font-size:10px; }
+  @keyframes marquee{ from{ transform: translateX(0); } to{ transform: translateX(-50%); } }
+
+  /* ---------- Section basics ---------- */
+  section{ padding: 88px 0; position:relative; }
+  .section-alt{ background: var(--bg-alt); }
+  .section-head{ margin-bottom: 52px; max-width: 640px; }
+  .section-head .sub{ font-size:13px; color: var(--blue); font-weight:700; margin-bottom:10px; }
+  .section-head h2{ font-size: clamp(24px, 3vw, 34px); line-height:1.5; margin-bottom: 16px; }
+  .section-head p{ color: var(--text-sub); font-size:15px; }
+
+  /* ---------- What we do ---------- */
+  .about-grid{ display:grid; grid-template-columns: 0.85fr 1.15fr; gap: 60px; align-items:center; position:relative; z-index:1; }
+  .about-grid .lead-num{
+    font-family: var(--ff-head); font-size: 15px; color: var(--text-sub);
+    border-left: 2px solid var(--blue); padding-left: 16px; margin-bottom: 22px;
+  }
+  .about-grid h2{ font-size: clamp(24px,3vw,32px); line-height:1.6; margin-bottom: 20px; }
+  .about-body p{ color: var(--text-sub); font-size:15px; margin-bottom: 18px; }
+  .about-body p:last-child{ margin-bottom:0; }
+  .about-art{ justify-self:center; }
+
+  /* ---------- Services ---------- */
+  .service-grid{
+    display:grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    position:relative; z-index:1;
+  }
+  .service-card{
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(0px) saturate(160%);
+    -webkit-backdrop-filter: blur(0px) saturate(160%);
+    border:1px solid var(--line); border-radius: 20px; padding: 32px;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease, backdrop-filter .3s ease, background .3s ease;
+    position:relative; overflow:hidden;
+  }
+  .service-card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 20px 44px rgba(20,33,61,0.12);
+    border-color: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+  }
+  .service-card .badge{
+    width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    margin-bottom:22px; transition: transform .3s ease;
+  }
+  .service-card:hover .badge{ transform: rotate(-6deg) scale(1.06); }
+  .service-card.blue .badge{ background: var(--blue-tint); }
+  .service-card.orange .badge{ background: var(--orange-tint); }
+  .service-card .tag{ font-size:12px; font-weight:700; color: var(--text-sub); margin-bottom:8px; font-family: var(--ff-head); }
+  .service-card h3{ font-size:19px; margin-bottom:12px; }
+  .service-card p{ color: var(--text-sub); font-size: 14.5px; }
+
+  /* ---------- Process ---------- */
+  .process-list{ position:relative; }
+  .process-item{
+    display:grid; grid-template-columns: 88px 1fr; gap: 28px;
+    padding: 0 0 48px; position:relative;
+  }
+  .process-item:last-child{ padding-bottom:0; }
+  .process-item .line{
+    position:absolute; left:43px; top: 88px; bottom:-2px; width:2px;
+    background: var(--line); overflow:hidden;
+  }
+  .process-item .line::after{
+    content:""; position:absolute; inset:0; background: var(--blue);
+    transform: scaleY(0); transform-origin: top; transition: transform .8s ease;
+  }
+  .process-item.in-view .line::after{ transform: scaleY(1); }
+  .process-item:last-child .line{ display:none; }
+  .p-num{
+    font-family: var(--ff-head); font-weight:900; font-size: 24px; color: var(--blue);
+    width:88px; height:88px; border:1px solid var(--line); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; background:#fff; z-index:1;
+    transition: background .3s ease, color .3s ease, border-color .3s ease;
+  }
+  .process-item.in-view .p-num{ background: var(--blue); color:#fff; border-color: var(--blue); }
+  .p-body h3{ font-size:18px; margin-bottom:8px; padding-top: 22px; }
+  .p-body p{ color: var(--text-sub); font-size:14.5px; max-width:58ch; }
+
+  /* ---------- Stats ---------- */
+  .stats{ background: var(--navy); color:#fff; overflow:hidden; }
+  .stats .section-head h2, .stats .section-head p{ color:#fff; }
+  .stats .section-head p{ color: rgba(255,255,255,0.6); }
+  .stat-grid{ display:grid; grid-template-columns: repeat(4,1fr); position:relative; z-index:1; }
+  .stat-item{ padding: 0 28px; border-left: 1px solid rgba(255,255,255,0.15); }
+  .stat-item:first-child{ padding-left:0; border-left:none; }
+  .stat-num{ font-family: var(--ff-head); font-weight:900; font-size: clamp(30px,3.4vw,44px); line-height:1; color: var(--orange); }
+  .stat-num .unit{ font-size: 0.45em; font-weight:500; margin-left:4px; color:#fff; }
+  .stat-label{ margin-top:14px; font-size: 13.5px; color: rgba(255,255,255,0.62); }
+
+  /* ---------- News ---------- */
+  .news-list{ border-top: 1px solid var(--line); }
+  .news-row{
+    display:grid; grid-template-columns: 130px 130px 1fr; gap: 24px; align-items:baseline;
+    padding: 22px 0; border-bottom: 1px solid var(--line);
+    transition: background .2s ease;
+  }
+  .news-row:hover{ background: var(--bg-alt); }
+  .news-row time{ font-size:13.5px; color: var(--text-sub); font-family: var(--ff-head); }
+  .news-tag{
+    font-size:12px; color: var(--blue); font-weight:700; align-self:center;
+    border: 1px solid var(--blue); border-radius: 999px; padding: 3px 12px; width:fit-content;
+  }
+  .news-row a{ font-size:15px; }
+  .news-row a:hover{ color: var(--blue); }
+  .news-foot{ margin-top: 32px; }
+  .news-foot a{ font-size:14px; color: var(--navy); border-bottom:1px solid var(--navy); padding-bottom:2px; }
+  .news-foot a:hover{ color: var(--blue); border-color: var(--blue); }
+
+  /* ---------- Recruit ---------- */
+  .recruit{
+    background: linear-gradient(120deg, var(--orange-tint), var(--blue-tint));
+    padding: 80px 0; overflow:hidden;
+  }
+  .recruit .container{
+    display:grid; grid-template-columns: 1fr auto 0.7fr; gap: 40px; align-items:center;
+  }
+  .recruit h2{ font-size: clamp(22px,2.8vw,30px); line-height:1.5; }
+  .recruit p{ color: var(--text-sub); margin-top:12px; font-size:14.5px; }
+  .recruit-art{ justify-self:center; }
+
+  /* ---------- Footer ---------- */
+  footer{ background: var(--navy); color: rgba(255,255,255,0.75); padding: 64px 0 32px; position:relative; overflow:hidden; }
+  .footer-top{
+    display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px;
+    padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.14);
+    position:relative; z-index:1;
+  }
+  .footer-logo{ font-family: var(--ff-head); font-weight:900; font-size:19px; color:#fff; margin-bottom:14px; }
+  .footer-top address{ font-style:normal; font-size:13.5px; line-height:1.9; color: rgba(255,255,255,0.55); }
+  .footer-col h4{ color:#fff; font-size:13.5px; font-weight:500; margin-bottom:16px; }
+  .footer-col ul li{ margin-bottom:10px; }
+  .footer-col a{ font-size:13.5px; color: rgba(255,255,255,0.6); transition: color .2s ease; }
+  .footer-col a:hover{ color: var(--orange); }
+  .footer-bottom{
+    padding-top: 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    position:relative; z-index:1;
+  }
+  .footer-bottom small{ font-size:12.5px; color: rgba(255,255,255,0.45); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px){
+    .hero .container{ grid-template-columns:1fr; }
+    .hero-art{ order:-1; max-width:320px; margin:0 auto 12px; }
+    .about-grid{ grid-template-columns:1fr; gap:32px; text-align:left; }
+    .about-art{ order:-1; max-width:280px; margin:0 auto; }
+    .service-grid{ grid-template-columns:1fr; }
+    .stat-grid{ grid-template-columns: repeat(2,1fr); row-gap:32px; }
+    .stat-item:nth-child(3){ border-left:none; padding-left:0; }
+    .footer-top{ grid-template-columns: 1fr 1fr; row-gap:32px; }
+    .recruit .container{ grid-template-columns:1fr; text-align:center; }
+    .recruit-art{ order:-1; max-width:200px; }
+  }
+  @media (max-width: 720px){
+    .nav-toggle{ display:flex; }
+    .main-nav{
+      position:fixed; inset: 76px 0 auto 0; background:#fff; flex-direction:column; align-items:stretch;
+      padding: 8px 32px 24px; border-bottom:1px solid var(--line);
+      transform: translateY(-12px); opacity:0; pointer-events:none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .main-nav.open{ transform:none; opacity:1; pointer-events:auto; box-shadow: 0 16px 30px rgba(20,33,61,0.08); }
+    .main-nav ul{ flex-direction:column; gap:0; }
+    .main-nav ul li{ border-bottom:1px solid var(--line); }
+    .main-nav ul li a{ display:block; padding:16px 0; }
+    .nav-cta{ margin-top:16px; text-align:center; }
+    section{ padding: 60px 0; }
+    .news-row{ grid-template-columns: 1fr; gap:6px; }
+    .marquee{ transform: rotate(-2deg); }
+  }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<header class="site-header" id="siteHeader">
+  <div class="container">
+    <a href="#" class="logo">SOLIDEX<span>ソリデックス株式会社</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="メニューを開く" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="main-nav" id="mainNav">
+      <ul>
+        <li><a href="#about">会社概要</a></li>
+        <li><a href="#services">事業内容</a></li>
+        <li><a href="#process">開発プロセス</a></li>
+        <li><a href="#news">ニュース</a></li>
+        <li><a href="#recruit">採用情報</a></li>
+      </ul>
+      <a href="#contact" class="nav-cta">お問い合わせ</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="blob" style="width:340px;height:340px;top:-80px;left:-120px;background:radial-gradient(circle,rgba(22,87,255,0.18),transparent 70%);animation:drift 9s ease-in-out infinite;"></div>
+  <div class="blob" style="width:260px;height:260px;bottom:-60px;right:-60px;background:radial-gradient(circle,rgba(255,138,61,0.20),transparent 70%);animation:drift2 8s ease-in-out infinite;"></div>
+
+  <div class="container">
+    <div class="hero-text">
+      <p class="hero-eyebrow">CUSTOM SYSTEM DEVELOPMENT</p>
+      <div class="hero-heading-wrap">
+        <span class="ghost-text" aria-hidden="true">SYSTEM</span>
+        <h1>動かないシステムは、<br>つくらない。</h1>
+      </div>
+      <p class="hero-lead">
+        要件定義から設計、開発、そして運用保守まで。<br>
+        同じチームが最後まで併走する受託開発会社です。
+      </p>
+      <div class="hero-actions">
+        <a href="#services" class="btn btn-primary">事業内容を見る</a>
+        <a href="#contact" class="btn btn-ghost">相談してみる</a>
+      </div>
+    </div>
+
+    <svg class="hero-art" viewBox="0 0 440 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ノートパソコンに向かって作業する人物のイラスト">
+      <ellipse class="scale-in" cx="230" cy="360" rx="150" ry="20" fill="#EEF3FF" style="animation-delay:.1s"/>
+
+      <!-- floating chips -->
+      <g class="float-el d2">
+        <rect x="20" y="70" width="86" height="58" rx="14" fill="#fff" stroke="#E4E9F5" stroke-width="1.5"/>
+        <path d="M40 100 l10 10 l20 -22" stroke="#1657FF" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <g class="float-el d3">
+        <circle cx="380" cy="110" r="34" fill="#FFF1E5"/>
+        <path d="M368 110 a12 12 0 1 1 24 0 a12 12 0 1 1 -24 0" fill="none" stroke="#FF8A3D" stroke-width="4"/>
+        <path d="M380 92 v10 M380 108 v10 M362 110 h10 M388 110 h10" stroke="#FF8A3D" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <g class="float-el">
+        <rect x="330" y="230" width="78" height="50" rx="12" fill="#fff" stroke="#E4E9F5" stroke-width="1.5"/>
+        <circle cx="352" cy="255" r="6" fill="#1657FF"/>
+        <rect x="366" y="250" width="30" height="5" rx="2.5" fill="#DCE4FF"/>
+        <rect x="366" y="260" width="20" height="5" rx="2.5" fill="#DCE4FF"/>
+      </g>
+
+      <!-- desk -->
+      <rect class="scale-in" x="70" y="330" width="300" height="14" rx="4" fill="#DCE4FF" style="animation-delay:.2s"/>
+
+      <!-- laptop -->
+      <g class="scale-in" style="animation-delay:.3s">
+        <rect x="150" y="250" width="140" height="90" rx="8" fill="#14213D"/>
+        <rect x="160" y="260" width="120" height="70" rx="4" fill="#1657FF"/>
+        <rect x="140" y="336" width="160" height="12" rx="4" fill="#1B2440"/>
+      </g>
+
+      <!-- person -->
+      <g class="scale-in" style="animation-delay:.42s">
+        <circle cx="220" cy="150" r="34" fill="#FFD9B8"/>
+        <path d="M188 145 q32 -34 64 0 v-10 q-32 -30 -64 0 z" fill="#14213D"/>
+        <path d="M150 300 q0 -80 70 -84 q70 4 70 84 z" fill="#1657FF"/>
+        <path d="M186 240 q34 18 68 0 l10 60 h-88 z" fill="#0C3FC7"/>
+      </g>
+
+      <!-- orbit ring -->
+      <g class="float-el d2" style="transform-origin:220px 150px;">
+        <circle cx="220" cy="150" r="86" fill="none" stroke="#DCE4FF" stroke-width="2" stroke-dasharray="4 10"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>OPEN UP YOUR SYSTEM</span>
+    <span>SOLIDEX Inc.</span>
+    <span>ものづくりに、責任を。</span>
+    <span>要件定義から運用保守まで</span>
+    <span>OPEN UP YOUR SYSTEM</span>
+    <span>SOLIDEX Inc.</span>
+    <span>ものづくりに、責任を。</span>
+    <span>要件定義から運用保守まで</span>
+  </div>
+</div>
+
+<section id="about" class="section-alt">
+  <div class="blob" style="width:220px;height:220px;top:20px;right:6%;background:radial-gradient(circle,rgba(255,138,61,0.14),transparent 70%);animation:drift 10s ease-in-out infinite;"></div>
+  <div class="container about-grid">
+    <div class="reveal">
+      <p class="lead-num">ABOUT US ― 私たちについて</p>
+      <h2>つくることに、<br>責任を持つ。</h2>
+    </div>
+    <div class="about-body reveal reveal-d2">
+      <p>
+        私たちは、要件定義から設計・開発、そしてリリース後の運用保守までを一気通貫で担う受託システム開発会社です。担当が変わるたびに情報が薄まる、つくった人がいなくなってしまう。そうした体制ではなく、同じチームが最後までシステムに責任を持って併走します。
+      </p>
+      <p>
+        金融、物流、製造、小売など、止まることが許されない現場のシステムを数多く手がけてきました。派手さよりも、確実に動き続けること。その一点に、私たちはこだわっています。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="blob" style="width:260px;height:260px;top:20%;left:8%;background:radial-gradient(circle,rgba(22,87,255,0.22),transparent 70%);animation:drift 10s ease-in-out infinite;"></div>
+  <div class="blob" style="width:220px;height:220px;bottom:8%;right:10%;background:radial-gradient(circle,rgba(255,138,61,0.22),transparent 70%);animation:drift2 9s ease-in-out infinite;"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="sub">SERVICES ― 事業内容</p>
+      <h2>お客様の"つくりたい"を、<br>形にする4つの領域</h2>
+      <p>要件のヒアリングから運用まで、システムのライフサイクル全体を支援しています。</p>
+    </div>
+
+    <div class="service-grid">
+      <div class="service-card blue reveal reveal-d1">
+        <div class="badge">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M9 8 L3 14 L9 20" stroke="#1657FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 8 L25 14 L19 20" stroke="#1657FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 5 L12 23" stroke="#1657FF" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </div>
+        <div class="tag">SERVICE.01</div>
+        <h3>システム開発</h3>
+        <p>基幹システムや業務システムを、要件定義からスクラッチで設計・開発します。既存パッケージでは対応しきれない、業務に合わせた個別要件にも柔軟に対応します。</p>
+      </div>
+
+      <div class="service-card orange reveal reveal-d2">
+        <div class="badge">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M9 20a5 5 0 0 1-1-9.9A6.5 6.5 0 0 1 20.6 8 5.5 5.5 0 0 1 21 20H9Z" stroke="#FF8A3D" stroke-width="2" stroke-linejoin="round"/><path d="M15 14v8m0-8l-3 3m3-3l3 3" stroke="#FF8A3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="tag">SERVICE.02</div>
+        <h3>クラウドインフラ構築・運用</h3>
+        <p>AWS・GCPなどのクラウド基盤で、拡張性と可用性を両立するインフラを設計します。構築後の監視・運用まで、同じチームが継続して担当します。</p>
+      </div>
+
+      <div class="service-card orange reveal reveal-d3">
+        <div class="badge">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M23 8a10 10 0 1 0 2.2 8" stroke="#FF8A3D" stroke-width="2.3" stroke-linecap="round" fill="none"/><path d="M23 3v7h-7" stroke="#FF8A3D" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </div>
+        <div class="tag">SERVICE.03</div>
+        <h3>レガシーシステム刷新</h3>
+        <p>老朽化した基幹システムを、業務を止めずに段階的にモダナイズします。現行仕様の棚卸しから移行計画の策定まで伴走します。</p>
+      </div>
+
+      <div class="service-card blue reveal reveal-d4">
+        <div class="badge">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 15a9 9 0 0 1 18 0" stroke="#1657FF" stroke-width="2.3" stroke-linecap="round"/><rect x="3" y="15" width="6" height="8" rx="2" fill="#1657FF"/><rect x="19" y="15" width="6" height="8" rx="2" fill="#1657FF"/></svg>
+        </div>
+        <div class="tag">SERVICE.04</div>
+        <h3>保守・運用サポート</h3>
+        <p>24時間の稼働監視と障害一次対応、定期的な改善提案まで。リリースして終わりにしない体制でシステムを育てます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="section-alt">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="sub">PROCESS ― 開発の進め方</p>
+      <h2>5つの工程で、<br>着実にかたちにする</h2>
+    </div>
+
+    <div class="process-list">
+      <div class="process-item" data-step>
+        <div class="p-num">01</div>
+        <div class="line"></div>
+        <div class="p-body">
+          <h3>要件定義</h3>
+          <p>現場にヒアリングを重ね、「本当に必要なこと」を言語化します。要望の背景にある業務課題まで掘り下げて整理します。</p>
+        </div>
+      </div>
+      <div class="process-item" data-step>
+        <div class="p-num">02</div>
+        <div class="line"></div>
+        <div class="p-body">
+          <h3>設計</h3>
+          <p>将来の拡張やデータ量の増加を見据え、無理のないシステム構成を設計します。仕様は図と文書の両方で残します。</p>
+        </div>
+      </div>
+      <div class="process-item" data-step>
+        <div class="p-num">03</div>
+        <div class="line"></div>
+        <div class="p-body">
+          <h3>開発</h3>
+          <p>品質基準とレビュー体制を整えたうえで、チームとして責任を持って実装を進めます。進捗は週次で共有します。</p>
+        </div>
+      </div>
+      <div class="process-item" data-step>
+        <div class="p-num">04</div>
+        <div class="line"></div>
+        <div class="p-body">
+          <h3>テスト</h3>
+          <p>単体・結合・受け入れの各段階で検証を重ね、リリース前に業務シナリオに沿った動作確認を行います。</p>
+        </div>
+      </div>
+      <div class="process-item" data-step>
+        <div class="p-num">05</div>
+        <div class="p-body">
+          <h3>運用保守</h3>
+          <p>リリース後も担当チームが変わることなく併走し、稼働状況の監視と改善提案を継続します。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="blob" style="width:300px;height:300px;top:-100px;right:-60px;background:radial-gradient(circle,rgba(255,138,61,0.16),transparent 70%);animation:drift 11s ease-in-out infinite;"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="sub">TRACK RECORD ― 実績</p>
+      <h2>数字で見る、ソリデックス</h2>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-item reveal reveal-d1">
+        <div class="stat-num"><span class="count" data-target="320">0</span><span class="unit">件以上</span></div>
+        <div class="stat-label">開発実績</div>
+      </div>
+      <div class="stat-item reveal reveal-d2">
+        <div class="stat-num"><span class="count" data-target="99.95" data-decimal="2">0</span><span class="unit">%</span></div>
+        <div class="stat-label">システム稼働率</div>
+      </div>
+      <div class="stat-item reveal reveal-d3">
+        <div class="stat-num"><span class="count" data-target="7.2" data-decimal="1">0</span><span class="unit">年</span></div>
+        <div class="stat-label">平均取引継続年数</div>
+      </div>
+      <div class="stat-item reveal reveal-d4">
+        <div class="stat-num"><span class="count" data-target="84">0</span><span class="unit">名</span></div>
+        <div class="stat-label">エンジニア在籍数</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="news">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="sub">NEWS ― お知らせ</p>
+      <h2>最新情報</h2>
+    </div>
+    <div class="news-list reveal reveal-d2">
+      <div class="news-row">
+        <time datetime="2026-09-01">2026.09.01</time>
+        <span class="news-tag">お知らせ</span>
+        <a href="#">コーポレートサイトをリニューアルしました</a>
+      </div>
+      <div class="news-row">
+        <time datetime="2026-08-15">2026.08.15</time>
+        <span class="news-tag">実績</span>
+        <a href="#">物流業向け基幹システム刷新プロジェクトが稼働開始</a>
+      </div>
+      <div class="news-row">
+        <time datetime="2026-07-20">2026.07.20</time>
+        <span class="news-tag">お知らせ</span>
+        <a href="#">夏季休業のお知らせ(8月13日〜8月16日)</a>
+      </div>
+    </div>
+    <p class="news-foot reveal"><a href="#">ニュース一覧を見る</a></p>
+  </div>
+</section>
+
+<section id="recruit" class="recruit">
+  <div class="container">
+    <div class="reveal">
+      <h2>一緒につくる仲間を、<br>募集しています。</h2>
+      <p>私たちのつくり方に共感し、システムに責任を持って向き合えるエンジニアを募集中です。</p>
+    </div>
+
+    <svg class="recruit-art reveal reveal-d2" width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="向かい合って話す2人のイラスト">
+      <circle cx="75" cy="75" r="72" fill="#fff" opacity=".5"/>
+      <g class="float-el">
+        <circle cx="52" cy="55" r="18" fill="#1657FF"/>
+        <path d="M30 108q0-30 22-32q22 2 22 32z" fill="#1657FF"/>
+      </g>
+      <g class="float-el d3">
+        <circle cx="100" cy="60" r="16" fill="#FF8A3D"/>
+        <path d="M80 108q0-26 20-28q20 2 20 28z" fill="#FF8A3D"/>
+      </g>
+      <path class="float-el d2" d="M65 60 q10 -14 20 0" stroke="#14213D" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <a href="#" class="btn btn-primary reveal reveal-d3">採用情報を見る</a>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="blob" style="width:260px;height:260px;bottom:-120px;left:-60px;background:radial-gradient(circle,rgba(22,87,255,0.25),transparent 70%);animation:drift2 12s ease-in-out infinite;"></div>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">SOLIDEX Inc.</div>
+        <address>
+          ソリデックス株式会社<br>
+          〒100-0001 東京都千代田区千代田1-1<br>
+          お問い合わせ: contact@solidex.example.jp
+        </address>
+      </div>
+      <div class="footer-col">
+        <h4>会社情報</h4>
+        <ul>
+          <li><a href="#about">会社概要</a></li>
+          <li><a href="#services">事業内容</a></li>
+          <li><a href="#process">開発プロセス</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>お知らせ</h4>
+        <ul>
+          <li><a href="#news">ニュース</a></li>
+          <li><a href="#recruit">採用情報</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>お問い合わせ</h4>
+        <ul>
+          <li><a href="mailto:contact@solidex.example.jp">contact@solidex.example.jp</a></li>
+          <li><a href="#">お問い合わせフォーム</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <small>&copy; 2026 SOLIDEX Inc. (仮作成サンプルサイト)</small>
+      <small>Privacy Policy</small>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // header shadow on scroll
+  var header = document.getElementById('siteHeader');
+  var onScroll = function(){
+    if (window.scrollY > 8) header.classList.add('scrolled');
+    else header.classList.remove('scrolled');
+  };
+  document.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // scroll progress bar
+  var progress = document.getElementById('scrollProgress');
+  var onProgress = function(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (scrolled / max) * 100 : 0;
+    progress.style.width = pct + '%';
+  };
+  document.addEventListener('scroll', onProgress, { passive:true });
+  onProgress();
+
+  // mobile nav toggle
+  var toggle = document.getElementById('navToggle');
+  var nav = document.getElementById('mainNav');
+  toggle.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  nav.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      nav.classList.remove('open');
+      toggle.classList.remove('open');
+      toggle.setAttribute('aria-expanded','false');
+    });
+  });
+
+  // scroll reveal
+  var revealEls = document.querySelectorAll('.reveal, .process-item');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  // count-up numbers
+  var counters = document.querySelectorAll('.count');
+  var animateCount = function(el){
+    var target = parseFloat(el.getAttribute('data-target'));
+    var decimals = parseInt(el.getAttribute('data-decimal') || '0', 10);
+    var duration = 1400;
+    var start = null;
+    function step(ts){
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var value = target * eased;
+      el.textContent = decimals ? value.toFixed(decimals) : Math.round(value);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = decimals ? target.toFixed(decimals) : target;
+    }
+    requestAnimationFrame(step);
+  };
+  if ('IntersectionObserver' in window){
+    var ioCount = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting){
+          animateCount(entry.target);
+          ioCount.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function(el){ ioCount.observe(el); });
+  } else {
+    counters.forEach(function(el){ el.textContent = el.getAttribute('data-target'); });
+  }
+})();
+</script>
+
+</body>
+</html>
